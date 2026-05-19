@@ -1,0 +1,531 @@
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강북 소매파트너 간담회 랜딩페이지</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E6007E', // 마젠타 핑크
+                        secondary: '#475569',
+                        bgDark: '#0f172a',
+                        accent: '#fdf2f8', // 연한 핑크
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans KR"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* 부드러운 스크롤 스냅 (섹션별로 딱딱 떨어지게) */
+        .snap-y-mandatory {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .snap-section {
+            scroll-snap-align: start;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 등장 애니메이션 */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 그라데이션 배경 효과 */
+        .bg-gradient-pink {
+            background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+        }
+
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* 커스텀 스크롤바 (선택적) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6007E; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c0006a; 
+        }
+
+        /* 갤러리 슬라이더 스타일 */
+        .gallery-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .gallery-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .gallery-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .gallery-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            color: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .gallery-btn:hover {
+            background: white;
+        }
+
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+
+        /* 네비게이션 닷 */
+        .gallery-dots {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .dot.active {
+            background: #E6007E;
+        }
+    </style>
+</head>
+<body class="text-slate-800 bg-slate-50">
+
+    <!-- 고정 헤더/네비게이션 -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">U+</div>
+                    <span class="font-bold text-lg tracking-tight">강북 소매파트너 간담회</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#hero" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors">홈</a>
+                    <a href="#grandslam" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors">그랜드 슬램</a>
+                    <a href="#tnps" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors">친절 직원</a>
+                    <a href="#tvfree" class="text-sm font-medium text-slate-600 hover:text-primary transition-colors">신규 상품(TV프리)</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 스크롤 스냅 래퍼 -->
+    <main class="snap-y-mandatory pt-16">
+
+        <!-- Section 1: Hero -->
+        <section id="hero" class="snap-section bg-gradient-pink relative overflow-hidden flex items-center justify-center">
+            <!-- 데코레이션 원형 요소들 -->
+            <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-primary opacity-10 rounded-full blur-3xl"></div>
+            
+            <div class="text-center px-4 max-w-4xl mx-auto z-10 fade-in-up">
+                <span class="inline-block py-1 px-3 rounded-full bg-pink-100 text-primary text-sm font-bold mb-6 tracking-widest border border-pink-200">2024년 4월 결산</span>
+                <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight text-slate-900">
+                    강북 소매파트너 <br class="hidden md:block" />
+                    <span class="text-primary">그랜드 슬램 & t-NPS 시상식</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-600 font-medium mb-10 max-w-2xl mx-auto leading-relaxed">
+                    어려운 환경 속에서도 빛나는 성과를 만들어주신<br>강북 파트너 여러분의 열정을 축하합니다!
+                </p>
+                <div class="animate-bounce mt-10">
+                    <a href="#grandslam" class="text-slate-400 hover:text-primary transition-colors">
+                        <i class="fa-solid fa-chevron-down text-3xl"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Grand Slam -->
+        <section id="grandslam" class="snap-section bg-white py-20 px-4">
+            <div class="max-w-7xl mx-auto w-full">
+                <div class="text-center mb-16 fade-in-up">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 text-yellow-500 mb-4">
+                        <i class="fa-solid fa-trophy text-3xl"></i>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">4월 그랜드 슬램 달성</h2>
+                    <div class="h-1 w-24 bg-primary mx-auto rounded-full mb-6"></div>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                        강북 본부 최고의 성과를 이뤄낸 파트너 분들을 소개합니다. 압도적인 세일즈 퍼포먼스와 팀워크에 박수를 보냅니다!
+                    </p>
+                </div>
+
+                <!-- 카드 그리드 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-up" style="transition-delay: 200ms;">
+                    <!-- 대상자 1: 강서소매 -->
+                    <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="h-64 overflow-hidden relative">
+                            <!-- TODO: 실제 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" alt="강서소매 팀 사진" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">목표 100% 달성</div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-2">강서소매</h3>
+                            <p class="text-slate-600 font-medium">놀라운 집중력으로 목표를 완벽하게 초과 달성했습니다!</p>
+                        </div>
+                    </div>
+
+                    <!-- 대상자 2: 남부소매 -->
+                    <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="h-64 overflow-hidden relative">
+                             <!-- TODO: 실제 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop" alt="남부소매 팀 사진" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">최우수 퍼포먼스</div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-2">남부소매</h3>
+                            <p class="text-slate-600 font-medium">압도적인 실적으로 모두의 귀감이 되는 퍼포먼스!</p>
+                        </div>
+                    </div>
+
+                    <!-- 대상자 3: 서부소매 -->
+                    <div class="bg-slate-50 rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:-translate-y-2 transition-transform duration-300 group">
+                        <div class="h-64 overflow-hidden relative">
+                             <!-- TODO: 실제 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop" alt="서부소매 팀 사진" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">베스트 팀워크</div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-2">서부소매</h3>
+                            <p class="text-slate-600 font-medium">단합된 힘으로 만들어낸 기적 같은 승리입니다!</p>
+                        </div>
+                    </div>
+                    <!-- ※ 나중에 축하할 대상이 추가되면 위 <div class="bg-slate-50 ... group"> 전체를 복사해서 아래에 붙여넣기 하세요. -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: t-NPS -->
+        <section id="tnps" class="snap-section bg-accent py-20 px-4 border-y border-pink-100">
+            <div class="max-w-7xl mx-auto w-full">
+                <div class="text-center mb-16 fade-in-up">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-pink-100 text-primary mb-4">
+                        <i class="fa-solid fa-heart text-3xl"></i>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">이달의 t-NPS 친절 직원</h2>
+                    <div class="h-1 w-24 bg-primary mx-auto rounded-full mb-6"></div>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                        고객 감동을 실천하는 강북의 얼굴들입니다. 진심을 다한 서비스로 최고의 고객 경험을 제공해주셔서 감사합니다.
+                    </p>
+                </div>
+
+                <!-- 프로필 그리드 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 fade-in-up" style="transition-delay: 200ms;">
+                    
+                    <!-- 직원 1 -->
+                    <div class="flex flex-col items-center bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-40 h-40 rounded-full overflow-hidden mb-6 border-4 border-pink-50 p-1">
+                             <!-- TODO: 실제 직원 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop" alt="김유플 점장" class="w-full h-full object-cover rounded-full">
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">김유플 점장</h3>
+                        <p class="text-primary font-bold mb-4">강서소매 직영점</p>
+                        <div class="text-center text-slate-500 text-sm italic bg-slate-50 p-4 rounded-xl w-full">
+                            "항상 웃는 얼굴로 세심하게 상담해주셔서 정말 감사했습니다." <br>- 고객 칭찬 VOC 중 -
+                        </div>
+                    </div>
+
+                    <!-- 직원 2 -->
+                    <div class="flex flex-col items-center bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-40 h-40 rounded-full overflow-hidden mb-6 border-4 border-pink-50 p-1">
+                             <!-- TODO: 실제 직원 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop" alt="이플러스 사원" class="w-full h-full object-cover rounded-full">
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">이플러스 사원</h3>
+                        <p class="text-primary font-bold mb-4">남부소매 직영점</p>
+                        <div class="text-center text-slate-500 text-sm italic bg-slate-50 p-4 rounded-xl w-full">
+                            "복잡한 요금제를 이해하기 쉽게 설명해주셔서 큰 도움이 되었습니다."
+                        </div>
+                    </div>
+
+                    <!-- 직원 3 -->
+                    <div class="flex flex-col items-center bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                        <div class="w-40 h-40 rounded-full overflow-hidden mb-6 border-4 border-pink-50 p-1">
+                             <!-- TODO: 실제 직원 사진으로 변경 -->
+                            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop" alt="박통신 선임" class="w-full h-full object-cover rounded-full">
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-900">박통신 선임</h3>
+                        <p class="text-primary font-bold mb-4">서부소매 직영점</p>
+                        <div class="text-center text-slate-500 text-sm italic bg-slate-50 p-4 rounded-xl w-full">
+                            "문제가 생겼을 때 내 일처럼 적극적으로 해결해주셨어요!"
+                        </div>
+                    </div>
+                     <!-- ※ 나중에 직원이 추가되면 위 <div class="flex flex-col ... "> 전체를 복사해서 붙여넣기 하세요. -->
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: TV Free Product Info (Gallery Slider) -->
+        <section id="tvfree" class="snap-section bg-gradient-dark py-20 px-4">
+            <div class="max-w-6xl mx-auto w-full">
+                
+                <div class="text-center mb-12 fade-in-up">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-800 text-primary mb-4 shadow-lg shadow-primary/20">
+                        <i class="fa-solid fa-tv text-3xl"></i>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-4">신규 상품 안내: <span class="text-primary">U+ TV프리</span></h2>
+                    <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                        집안 어디서나 자유롭게 즐기는 나만의 TV! <br>아래 슬라이드를 넘기며 영업에 활용할 핵심 가이드를 확인하세요.
+                    </p>
+                </div>
+
+                <!-- 갤러리 슬라이더 컨테이너 -->
+                <div class="fade-in-up" style="transition-delay: 200ms;">
+                    <div class="gallery-container bg-slate-800 border border-slate-700">
+                        <!-- 이전/다음 버튼 -->
+                        <button class="gallery-btn prev-btn" onclick="moveSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="gallery-btn next-btn" onclick="moveSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                        
+                        <!-- 슬라이드 트랙 -->
+                        <div class="gallery-slides" id="galleryTrack">
+                            
+                            <!-- 슬라이드 1 -->
+                            <div class="gallery-slide">
+                                <!-- TODO: 첫 번째 캡쳐 이미지로 src 변경 -->
+                                <img src="https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1984&auto=format&fit=crop" alt="TV프리 1페이지">
+                                <div class="gallery-caption">
+                                    <h4 class="font-bold text-lg text-primary mb-1">1. 핵심 소구 포인트</h4>
+                                    <p class="text-sm text-slate-200">와이파이만 연결되면 집안 곳곳 어디서나 실시간 방송 시청!</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 슬라이드 2 -->
+                            <div class="gallery-slide">
+                                <!-- TODO: 두 번째 캡쳐 이미지로 src 변경 -->
+                                <img src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?q=80&w=2067&auto=format&fit=crop" alt="TV프리 2페이지">
+                                <div class="gallery-caption">
+                                    <h4 class="font-bold text-lg text-primary mb-1">2. 주요 기능 스펙</h4>
+                                    <p class="text-sm text-slate-200">선명한 화질과 끊김 없는 반응 속도를 자랑하는 최신 디바이스</p>
+                                </div>
+                            </div>
+
+                            <!-- 슬라이드 3 -->
+                            <div class="gallery-slide">
+                                <!-- TODO: 세 번째 캡쳐 이미지로 src 변경 -->
+                                <img src="https://images.unsplash.com/photo-1593642702821-c823b13eb295?q=80&w=2069&auto=format&fit=crop" alt="TV프리 3페이지">
+                                <div class="gallery-caption">
+                                    <h4 class="font-bold text-lg text-primary mb-1">3. 추천 타겟 고객</h4>
+                                    <p class="text-sm text-slate-200">주방에서 요리하는 주부, 안방에서 영화를 즐기고 싶은 부모님</p>
+                                </div>
+                            </div>
+
+                            <!-- 슬라이드 4 -->
+                            <div class="gallery-slide">
+                                <!-- TODO: 네 번째 캡쳐 이미지로 src 변경 -->
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" alt="TV프리 4페이지">
+                                <div class="gallery-caption">
+                                    <h4 class="font-bold text-lg text-primary mb-1">4. 요금제 및 프로모션</h4>
+                                    <p class="text-sm text-slate-200">결합 시 극대화되는 가성비! 기기값 할인 프로모션 안내</p>
+                                </div>
+                            </div>
+
+                            <!-- 슬라이드 5 -->
+                            <div class="gallery-slide">
+                                <!-- TODO: 다섯 번째 캡쳐 이미지로 src 변경 -->
+                                <img src="https://images.unsplash.com/photo-1553484771-371a605b060b?q=80&w=2070&auto=format&fit=crop" alt="TV프리 5페이지">
+                                <div class="gallery-caption">
+                                    <h4 class="font-bold text-lg text-primary mb-1">5. 상담 화법 요약</h4>
+                                    <p class="text-sm text-slate-200">고객 니즈를 끌어내는 실전 맞춤형 질문 스크립트</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <!-- 갤러리 인디케이터 (Dots) -->
+                    <div class="gallery-dots" id="galleryDots">
+                        <span class="dot active" onclick="currentSlide(0)"></span>
+                        <span class="dot" onclick="currentSlide(1)"></span>
+                        <span class="dot" onclick="currentSlide(2)"></span>
+                        <span class="dot" onclick="currentSlide(3)"></span>
+                        <span class="dot" onclick="currentSlide(4)"></span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white py-12 text-center border-t border-slate-200">
+            <div class="max-w-4xl mx-auto px-4">
+                <h3 class="text-2xl font-bold text-slate-800 mb-4">다시 한번 축하드립니다! 🎉</h3>
+                <p class="text-slate-500 mb-8">
+                    강북 소매파트너 분들의 열정과 노고에 깊이 감사드립니다.<br>
+                    앞으로도 자랑스러운 파트너분들의 소식을 계속해서 업데이트 하겠습니다.
+                </p>
+                <div class="inline-flex items-center justify-center space-x-2 text-sm text-slate-400 bg-slate-50 px-4 py-2 rounded-lg">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>사진 추가 및 내용은 HTML 소스코드 수정을 통해 계속 업데이트 가능합니다.</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- 스크롤 시 등장 애니메이션 (Intersection Observer) ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // 한번 보이면 계속 보이게 하려면 아래 줄 주석 해제
+                    // observer.unobserve(entry.target); 
+                } else {
+                    // 스크롤 올려서 안보일때 다시 클래스 빼면, 내릴때마다 애니메이션 반복됨
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(element => {
+            observer.observe(element);
+        });
+
+        // --- 갤러리 슬라이더 로직 ---
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.gallery-slide');
+        const dots = document.querySelectorAll('.dot');
+        const track = document.getElementById('galleryTrack');
+
+        function updateSlider() {
+            // 트랙 이동
+            track.style.transform = `translateX(-${slideIndex * 100}%)`;
+            
+            // 닷 업데이트
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[slideIndex].classList.add('active');
+        }
+
+        function moveSlide(step) {
+            slideIndex += step;
+            
+            // 경계 처리 (무한 루프 형태)
+            if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            } else if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            }
+            
+            updateSlider();
+        }
+
+        function currentSlide(index) {
+            slideIndex = index;
+            updateSlider();
+        }
+
+        // 터치 스와이프 지원 (모바일)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        track.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        track.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const threshold = 50; // 최소 스와이프 거리
+            if (touchEndX < touchStartX - threshold) {
+                moveSlide(1); // 왼쪽으로 스와이프 -> 다음 슬라이드
+            }
+            if (touchEndX > touchStartX + threshold) {
+                moveSlide(-1); // 오른쪽으로 스와이프 -> 이전 슬라이드
+            }
+        }
+    </script>
+</body>
+</html>
